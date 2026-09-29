@@ -1,0 +1,1540 @@
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.app {
+  position: relative;
+
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  padding:
+    clamp(20px, 4vh, 48px)
+    clamp(16px, 4vw, 64px);
+}
+
+/* 极淡科研网格 */
+
+.app::before {
+  content: "";
+
+  position: fixed;
+  inset: 0;
+
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(
+      rgba(112, 124, 146, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(112, 124, 146, 0.025) 1px,
+      transparent 1px
+    );
+
+  background-size: 48px 48px;
+
+  mask-image:
+    radial-gradient(
+      circle at center,
+      black 0%,
+      transparent 78%
+    );
+
+  opacity: 0.7;
+}
+
+/* 环境光 */
+
+.app::after {
+  content: "";
+
+  position: fixed;
+
+  width: min(70vw, 1000px);
+  aspect-ratio: 1;
+
+  left: 50%;
+  top: 44%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(72, 87, 117, 0.055) 0%,
+      rgba(56, 66, 88, 0.025) 38%,
+      transparent 70%
+    );
+
+  filter: blur(20px);
+}
+
+.phase-wrapper {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================
+   首页 / 分析仪
+   ========================= */
+
+.analyzer {
+  width: min(100%, 1120px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  margin-bottom: 28px;
+
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+
+  color: #858b96;
+}
+
+.status::before {
+  content: "";
+
+  width: 5px;
+  height: 5px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #737f94;
+
+  box-shadow:
+    0 0 7px rgba(115, 127, 148, 0.55);
+
+  animation:
+    standbyStatusPulse 2.4s ease-in-out infinite;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+
+  color: #8996ad;
+}
+
+h1 {
+  margin: 0;
+
+  font-size: clamp(38px, 4.5vw, 68px);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+
+  color: #e8e6df;
+}
+
+.description {
+  width: min(100%, 560px);
+
+  margin: 20px 0 0;
+
+  font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1.8;
+
+  color: #999da6;
+}
+
+/* =========================
+   扫描仪
+   ========================= */
+
+.scanner {
+  position: relative;
+
+  width: clamp(180px, 20vw, 320px);
+  aspect-ratio: 1;
+
+  margin:
+    clamp(36px, 5vh, 56px)
+    0;
+
+  padding: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #343944;
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(81, 95, 122, 0.055),
+      transparent 68%
+    );
+
+  box-shadow:
+    inset 0 0 46px rgba(74, 87, 111, 0.035),
+    0 0 32px rgba(68, 81, 105, 0.035);
+
+  animation:
+    standbyBreath 4.5s ease-in-out infinite;
+}
+
+.scanner::before,
+.scanner::after {
+  content: "";
+
+  position: absolute;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+.scanner::before {
+  inset: 8%;
+
+  border:
+    1px dashed
+    rgba(115, 127, 148, 0.13);
+
+  animation:
+    standbyRotate 24s linear infinite;
+}
+
+.scanner::after {
+  inset: 23%;
+
+  border:
+    1px dotted
+    rgba(115, 127, 148, 0.1);
+
+  animation:
+    standbyRotateReverse 18s linear infinite;
+}
+
+.scanner-core {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  border: 1px solid #252a33;
+  border-radius: 50%;
+
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+
+  color: #697184;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(91, 105, 135, 0.08),
+      transparent 65%
+    );
+}
+
+.scanner-core::before {
+  content: "";
+
+  position: absolute;
+
+  width: 70%;
+  height: 1px;
+
+  top: 50%;
+  left: 15%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(125, 140, 167, 0.13),
+      transparent
+    );
+
+  animation:
+    standbyLine 3.8s ease-in-out infinite;
+
+  pointer-events: none;
+}
+
+/* =========================
+   首页按钮
+   ========================= */
+
+.start-button {
+  min-width: 180px;
+  height: 52px;
+
+  padding: 0 28px;
+
+  border: 1px solid #4b5261;
+  border-radius: 8px;
+
+  background: #1b1e24;
+  color: #e6e3db;
+
+  font-size: 15px;
+  letter-spacing: 0.04em;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.start-button:hover {
+  background: #22262e;
+  border-color: #697184;
+}
+
+.start-button:active {
+  transform: scale(0.98);
+}
+
+.disclaimer {
+  margin-top: 24px;
+
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+
+  color: #565c67;
+}
+
+/* =========================
+   运势结果卡
+   ========================= */
+
+.result-card {
+  --fortune-accent: #aeb4bf;
+  --fortune-glow: rgba(174, 180, 191, 0.06);
+  
+  width: min(100%, 1040px);
+
+  padding:
+    clamp(24px, 3.5vw, 52px);
+
+  border: 1px solid #303540;
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(29, 32, 39, 0.95),
+      rgba(18, 20, 24, 0.96)
+    );
+
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.32);
+
+  text-align: left;
+}
+
+/* =========================
+   运势等级视觉差异
+   ========================= */
+
+.fortune-daji {
+  --fortune-accent: #c8bb8d;
+  --fortune-glow: rgba(200, 187, 141, 0.09);
+}
+
+.fortune-ji {
+  --fortune-accent: #b7b38e;
+  --fortune-glow: rgba(183, 179, 142, 0.07);
+}
+
+.fortune-xiaoji {
+  --fortune-accent: #a9b3a1;
+  --fortune-glow: rgba(169, 179, 161, 0.06);
+}
+
+.fortune-ping {
+  --fortune-accent: #aeb4bf;
+  --fortune-glow: rgba(174, 180, 191, 0.05);
+}
+
+.fortune-xiaoxiong {
+  --fortune-accent: #b39d86;
+  --fortune-glow: rgba(179, 157, 134, 0.06);
+}
+
+.fortune-xiong {
+  --fortune-accent: #ae8f8f;
+  --fortune-glow: rgba(174, 143, 143, 0.07);
+}
+
+.result-eyebrow {
+  margin: 0 0 26px;
+
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+
+  color: #687184;
+}
+
+.result-label {
+  margin: 0 0 6px;
+
+  font-size: 14px;
+
+  color: #8f949d;
+}
+
+.fortune-level {
+  text-shadow:
+    0 0 24px rgba(180, 185, 198, 0.05);
+  margin: 0;
+
+  font-size: clamp(48px, 5vw, 78px);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+
+  color: var(--fortune-accent);
+
+  text-shadow:
+    0 0 28px var(--fortune-glow);
+}
+
+.fortune-headline {
+  margin: 26px 0 10px;
+
+  font-size: clamp(18px, 1.5vw, 22px);
+  font-weight: 500;
+
+  color: #d6d5d1;
+}
+
+.oracle-text {
+  max-width: 760px;
+
+  margin: 0;
+
+  line-height: 1.9;
+  font-size: clamp(14px, 1.1vw, 16px);
+
+  color: #999fa9;
+}
+
+/* =========================
+   指标
+   ========================= */
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: clamp(10px, 1.5vw, 18px);
+
+  margin:
+    clamp(26px, 4vw, 38px)
+    0;
+}
+
+.metric-item {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  padding:
+    clamp(16px, 1.8vw, 22px);
+
+  border: 1px solid #292e37;
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.metric-name {
+  font-size: 12px;
+
+  color: #777e89;
+}
+
+.metric-value {
+  font-family: "Courier New", monospace;
+  font-size: clamp(24px, 2.2vw, 30px);
+  font-weight: 400;
+
+  font-variant-numeric: tabular-nums;
+
+  color: #d9d8d3;
+}
+
+/* =========================
+   宜 / 忌 / 护身符
+   ========================= */
+
+.fortune-details {
+  display: flex;
+  flex-direction: column;
+
+  border-top: 1px solid #292e37;
+  border-bottom: 1px solid #292e37;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+
+  gap: 20px;
+
+  padding: 16px 0;
+
+  border-bottom: 1px solid #22262e;
+
+  line-height: 1.6;
+
+  color: #b3b5b8;
+}
+
+.detail-row:last-child {
+  border-bottom: 0;
+}
+
+.detail-label {
+  font-size: 13px;
+
+  color: #707886;
+}
+
+/* =========================
+   建议
+   ========================= */
+
+.advice-box {
+  margin-top: 28px;
+  padding:
+    clamp(18px, 2vw, 22px);
+
+  border-left: 2px solid #58657d;
+
+  background: rgba(74, 86, 110, 0.06);
+}
+
+.advice-label {
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+
+  color: #717b90;
+}
+
+.advice-box p {
+  margin: 10px 0 0;
+
+  line-height: 1.8;
+  font-size: 14px;
+
+  color: #a8abb2;
+}
+
+/* =========================
+   重抽按钮
+   ========================= */
+
+.retry-button {
+  width: 100%;
+  height: 50px;
+
+  margin-top: 30px;
+
+  border: 1px solid #414754;
+  border-radius: 8px;
+
+  background: #1b1e24;
+  color: #dfddd6;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.retry-button:hover {
+  background: #22262d;
+  border-color: #5c6474;
+}
+
+.retry-button:active {
+  transform: scale(0.99);
+}
+
+/* =========================
+   测算过程
+   ========================= */
+
+.analysis-process {
+  width: min(100%, 760px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+.process-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  margin-bottom: 34px;
+}
+
+.process-status {
+  margin: 0;
+
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+
+  color: #7b8496;
+}
+
+.process-live-dot {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #8995aa;
+
+  box-shadow:
+    0 0 8px rgba(137, 149, 170, 0.7);
+
+  animation:
+    livePulse 1.4s ease-in-out infinite;
+}
+
+/* 扫描主体 */
+
+.process-scanner {
+  position: relative;
+
+  width: clamp(180px, 20vw, 280px);
+  aspect-ratio: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  border: 1px solid #39404c;
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(91, 105, 135, 0.08) 0%,
+      rgba(45, 51, 63, 0.035) 40%,
+      transparent 72%
+    );
+
+  box-shadow:
+    inset 0 0 50px rgba(75, 88, 113, 0.05),
+    0 0 42px rgba(63, 75, 99, 0.05);
+}
+
+/* 三层环 */
+
+.scanner-ring {
+  position: absolute;
+
+  border: 1px solid rgba(117, 129, 151, 0.13);
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+.scanner-ring-outer {
+  inset: 9%;
+
+  border-style: dashed;
+
+  animation:
+    scannerRotate 14s linear infinite;
+}
+
+.scanner-ring-middle {
+  inset: 23%;
+
+  border-color: rgba(117, 129, 151, 0.18);
+
+  animation:
+    scannerRotateReverse 10s linear infinite;
+}
+
+.scanner-ring-inner {
+  inset: 36%;
+
+  border-style: dotted;
+
+  animation:
+    scannerRotate 7s linear infinite;
+}
+
+/* 扫描扇区 */
+
+.scan-beam {
+  position: absolute;
+
+  inset: 7%;
+
+  border-radius: 50%;
+
+  background:
+    conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      transparent 285deg,
+      rgba(101, 121, 157, 0.03) 300deg,
+      rgba(116, 139, 180, 0.16) 326deg,
+      rgba(116, 139, 180, 0.04) 348deg,
+      transparent 360deg
+    );
+
+  animation:
+    scannerRotate 3.6s linear infinite;
+
+  pointer-events: none;
+}
+
+/* 十字校准线 */
+
+.scanner-crosshair {
+  position: absolute;
+
+  background: rgba(111, 122, 143, 0.07);
+
+  pointer-events: none;
+}
+
+.scanner-crosshair-x {
+  width: 78%;
+  height: 1px;
+}
+
+.scanner-crosshair-y {
+  width: 1px;
+  height: 78%;
+}
+
+/* 中心数据 */
+
+.process-scanner-inner {
+  position: relative;
+  z-index: 2;
+
+  width: 42%;
+  aspect-ratio: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  border: 1px solid rgba(116, 128, 150, 0.22);
+  border-radius: 50%;
+
+  background:
+    rgba(16, 18, 22, 0.82);
+
+  box-shadow:
+    0 0 30px rgba(92, 107, 137, 0.09);
+
+  font-family: "Courier New", monospace;
+}
+
+.process-scanner-inner span {
+  font-size: clamp(23px, 3vw, 34px);
+  font-weight: 400;
+
+  color: #b8bec9;
+}
+
+.process-scanner-inner small {
+  font-size: 7px;
+  letter-spacing: 0.14em;
+
+  color: #596273;
+}
+
+/* 不同阶段给予轻微差异 */
+
+.phase-scanning {
+  box-shadow:
+    inset 0 0 54px rgba(75, 88, 113, 0.07),
+    0 0 48px rgba(68, 82, 110, 0.08);
+}
+
+.phase-revealing .scan-beam {
+  animation-duration: 7s;
+
+  opacity: 0.55;
+}
+
+/* 标题 */
+
+.process-title {
+  margin: 36px 0 10px;
+
+  font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 500;
+
+  color: #dfddd7;
+}
+
+.process-description {
+  width: min(100%, 560px);
+
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 1.8;
+
+  color: #8d939e;
+}
+
+/* 进度 */
+
+.process-progress {
+  width: min(100%, 520px);
+  height: 2px;
+
+  margin-top: 34px;
+
+  overflow: hidden;
+
+  background: #272b33;
+}
+
+.process-progress-bar {
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #596577,
+      #8995a9
+    );
+
+  box-shadow:
+    0 0 8px rgba(116, 132, 161, 0.22);
+}
+
+/* 三阶段 */
+
+.process-steps {
+  width: min(100%, 520px);
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  margin-top: 16px;
+}
+
+.process-step {
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+
+  color: #404651;
+
+  transition:
+    color 0.25s ease;
+}
+
+.process-step.active {
+  color: #a8b0bf;
+}
+
+.process-step.done {
+  color: #687284;
+}
+
+/* =========================
+   天机档案入口
+   ========================= */
+
+.history-trigger {
+  position: fixed;
+  z-index: 20;
+
+  top: 24px;
+  right: 28px;
+
+  padding: 9px 12px;
+
+  border: 1px solid #303641;
+  border-radius: 6px;
+
+  background:
+    rgba(18, 20, 24, 0.66);
+
+  color: #6f7888;
+
+  font-family:
+    "Courier New",
+    monospace;
+
+  font-size: 9px;
+  letter-spacing: 0.14em;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(8px);
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.history-trigger:hover {
+  color: #a9b0bc;
+  border-color: #4c5564;
+
+  background:
+    rgba(25, 28, 34, 0.82);
+}
+
+/* =========================
+   天机档案抽屉
+   ========================= */
+
+.history-backdrop {
+  position: fixed;
+  z-index: 50;
+
+  inset: 0;
+
+  border: 0;
+
+  background:
+    rgba(5, 6, 8, 0.5);
+
+  backdrop-filter: blur(3px);
+
+  cursor: default;
+}
+
+.history-drawer {
+  position: fixed;
+  z-index: 60;
+
+  top: 0;
+  right: 0;
+
+  width: min(420px, 90vw);
+  height: 100vh;
+
+  padding: 28px;
+
+  overflow-y: auto;
+
+  border-left:
+    1px solid #303641;
+
+  background:
+    rgba(17, 19, 23, 0.97);
+
+  box-shadow:
+    -24px 0 80px
+    rgba(0, 0, 0, 0.32);
+}
+
+.history-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 28px;
+}
+
+.history-eyebrow {
+  font-family:
+    "Courier New",
+    monospace;
+
+  font-size: 9px;
+  letter-spacing: 0.18em;
+
+  color: #687184;
+}
+
+.history-header h2 {
+  margin: 8px 0 0;
+
+  font-size: 26px;
+  font-weight: 500;
+
+  color: #dedcd6;
+}
+
+.history-close {
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  border:
+    1px solid #303641;
+
+  border-radius: 6px;
+
+  background: transparent;
+  color: #818894;
+
+  font-size: 22px;
+
+  cursor: pointer;
+}
+
+.history-close:hover {
+  color: #d0d2d5;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.history-item {
+  padding: 16px;
+
+  border:
+    1px solid #282d35;
+
+  border-radius: 9px;
+
+  background:
+    rgba(255, 255, 255, 0.015);
+}
+
+.history-item-top {
+  display: flex;
+  justify-content: space-between;
+
+  margin-bottom: 10px;
+
+  font-family:
+    "Courier New",
+    monospace;
+
+  font-size: 9px;
+  letter-spacing: 0.1em;
+
+  color: #555d6b;
+}
+
+.history-result-row {
+  display: flex;
+  align-items: baseline;
+
+  gap: 12px;
+}
+
+.history-result-row strong {
+  flex-shrink: 0;
+
+  font-size: 20px;
+  font-weight: 500;
+
+  color: #c9c8c3;
+}
+
+.history-result-row span {
+  overflow: hidden;
+
+  font-size: 12px;
+
+  color: #898f99;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.history-metrics {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 14px;
+
+  margin-top: 14px;
+
+  font-family:
+    "Courier New",
+    monospace;
+
+  font-size: 9px;
+
+  color: #626a77;
+}
+
+.history-empty {
+  padding: 40px 0;
+
+  text-align: center;
+
+  font-size: 13px;
+
+  color: #646b76;
+}
+
+/* =========================
+   扫描动画
+   ========================= */
+
+@keyframes standbyRotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes standbyRotateReverse {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes standbyBreath {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 0 46px rgba(74, 87, 111, 0.03),
+      0 0 28px rgba(68, 81, 105, 0.025);
+  }
+
+  50% {
+    box-shadow:
+      inset 0 0 54px rgba(74, 87, 111, 0.055),
+      0 0 42px rgba(68, 81, 105, 0.055);
+  }
+}
+
+@keyframes standbyLine {
+  0%,
+  100% {
+    transform: translateY(-42px);
+
+    opacity: 0.25;
+  }
+
+  50% {
+    transform: translateY(42px);
+
+    opacity: 0.75;
+  }
+}
+
+@keyframes standbyStatusPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes scannerRotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes scannerRotateReverse {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes livePulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+/* =========================
+   平板
+   ========================= */
+
+@media (max-width: 900px) {
+  .result-card {
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .detail-row {
+    grid-template-columns: 100px 1fr;
+  }
+}
+
+/* =========================
+   手机
+   ========================= */
+
+/* =========================
+   手机
+   ========================= */
+
+@media (max-width: 600px) {
+  .app {
+    align-items: flex-start;
+
+    padding:
+      24px
+      16px;
+  }
+
+  .history-trigger {
+    top: 16px;
+    right: 16px;
+  }
+
+  .history-drawer {
+    width: min(360px, 94vw);
+
+    padding: 24px 18px;
+  }
+
+  .analyzer {
+    min-height: calc(100vh - 48px);
+
+    justify-content: center;
+  }
+
+  .status {
+    margin-bottom: 22px;
+  }
+
+  .scanner {
+    width: min(56vw, 190px);
+
+    margin: 38px 0;
+  }
+
+  .description {
+    width: min(100%, 420px);
+
+    font-size: 14px;
+  }
+
+  .start-button {
+    width: min(100%, 260px);
+  }
+
+  /* 测算过程 */
+
+  .analysis-process {
+    min-height: calc(100vh - 48px);
+
+    justify-content: center;
+  }
+
+  .process-scanner {
+    width: min(58vw, 200px);
+  }
+
+.redraw-message {
+  width: min(100%, 520px);
+
+  margin: 14px 0 0;
+
+  font-size: 13px;
+  line-height: 1.7;
+
+  color: #8f887d;
+}
+
+.draw-counter {
+  margin-top: 14px;
+
+  font-family: "Courier New", monospace;
+  font-size: 8px;
+  letter-spacing: 0.16em;
+
+  color: #444b57;
+}
+
+  .process-title {
+    margin-top: 30px;
+  }
+
+  .process-description {
+    max-width: 340px;
+  }
+
+  .process-progress,
+  .process-steps {
+    width: min(100%, 360px);
+  }
+
+  /* 结果卡 */
+  /* =========================
+   特殊事件
+   ========================= */
+
+  .special-event {
+    --special-accent: #8792a5;
+    --special-bg: rgba(90, 103, 127, 0.055);
+
+    margin:
+      0
+      0
+      28px;
+
+    padding:
+      18px
+      20px;
+
+    border:
+      1px solid
+      color-mix(
+       in srgb,
+       var(--special-accent) 32%,
+       transparent
+     );
+
+   border-radius: 10px;
+
+   background:
+     var(--special-bg);
+  }
+
+  .special-event-tag {
+    display: block;
+
+    margin-bottom: 9px;
+
+    font-family:
+      "Courier New",
+     monospace;
+
+    font-size: 9px;
+    letter-spacing: 0.16em;
+
+   color:
+      var(--special-accent);
+  }
+
+  .special-event strong {
+    display: block;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    color: #d3d4d6;
+  }
+
+  .special-event p {
+    margin:
+      8px
+      0
+      0;
+
+    font-size: 13px;
+    line-height: 1.7;
+
+    color: #979ca5;
+  }
+
+  .special-event small {
+    display: block;
+
+    margin-top: 8px;
+
+    font-size: 11px;
+    line-height: 1.6;
+
+    color: #686f7b;
+  }
+
+  .special-event-rare {
+    --special-accent: #8797b0;
+    --special-bg:
+      rgba(82, 101, 133, 0.06);
+  }
+
+  .special-event-hidden {
+    --special-accent: #9b8fae;
+    --special-bg:
+      rgba(105, 89, 125, 0.06);
+  }
+
+  .special-event-error {
+    --special-accent: #a68181;
+    --special-bg:
+      rgba(125, 78, 78, 0.055);
+  }
+
+  .special-event-miracle {
+    --special-accent: #c3b17e;
+    --special-bg:
+      rgba(157, 135, 77, 0.07);
+  }
+
+
+  .result-card {
+    width: 100%;
+
+    padding: 28px 20px;
+
+    border-radius: 14px;
+  }
+
+  .result-eyebrow {
+    margin-bottom: 20px;
+  }
+
+  .fortune-headline {
+    margin-top: 22px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+
+    gap: 10px;
+
+    margin: 28px 0;
+  }
+
+  .metric-item {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+  }
+
+  .metric-value {
+    flex-shrink: 0;
+  }
+
+  .detail-row {
+    grid-template-columns: 80px 1fr;
+
+    gap: 14px;
+  }
+}
+
+/* =========================
+   很窄的手机
+   ========================= */
+
+@media (max-width: 380px) {
+  .app {
+    padding:
+      20px
+      12px;
+  }
+
+  .result-card {
+    padding:
+      24px
+      16px;
+  }
+
+  .detail-row {
+    grid-template-columns: 72px 1fr;
+
+    gap: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+
+    transition-duration: 0.01ms !important;
+
+    scroll-behavior: auto !important;
+  }
+}
