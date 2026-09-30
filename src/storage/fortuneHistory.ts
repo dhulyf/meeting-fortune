@@ -60,3 +60,13 @@ export function saveFortuneReport(
 
   return next
 }
+
+export function resetFortuneHistory(): void {
+  try {
+    window.localStorage.removeItem(
+      STORAGE_KEY,
+    )
+  } catch {
+    // 同上。
+  }
+}

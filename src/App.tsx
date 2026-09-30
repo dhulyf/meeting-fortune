@@ -1,9 +1,11 @@
 import HistoryDrawer from './components/HistoryDrawer'
+import OfferingDrawer from './components/OfferingDrawer'
 import {
   getFortuneHistory,
+  resetFortuneHistory,
   saveFortuneReport,
 } from './storage/fortuneHistory'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   AnimatePresence,
   motion,
@@ -19,10 +21,22 @@ import { buildFortuneReport } from './engine/reportEngine'
 
 import type { FortuneReport } from './types/fortune'
 import type { AppPhase } from './types/ui'
+import type { UserSettings } from './types/settings'
 import {
   getTodayDrawCount,
   incrementTodayDrawCount,
+  resetTodayDrawCount,
 } from './storage/drawState'
+
+import {
+  resetOfferingState,
+} from './storage/offeringState'
+
+import {
+  getUserSettings,
+  resetUserSettings,
+  saveUserSettings,
+} from './storage/userSettings'
 
 import {
   getDrawMessage,
@@ -35,12 +49,34 @@ function wait(ms: number) {
   })
 }
 
+const PHASE_MS = {
+  calibrating: 1200,
+  scanning: 2200,
+  revealing: 1000,
+} as const
+
+const ANALYSIS_TOTAL_MS =
+  PHASE_MS.calibrating +
+  PHASE_MS.scanning +
+  PHASE_MS.revealing
+
 function App() {
   const [phase, setPhase] =
     useState<AppPhase>('idle')
 
   const [historyOpen, setHistoryOpen] =
   useState(false)
+
+  const [offeringOpen, setOfferingOpen] =
+  useState(false)
+
+  const [settings, setSettings] =
+    useState<UserSettings>(
+      () => getUserSettings(),
+    )
+
+  const [toast, setToast] =
+    useState<string | null>(null)
 
   const [report, setReport] =
     useState<FortuneReport | null>(null)
@@ -56,6 +92,45 @@ function App() {
   const [drawMessage, setDrawMessage] =
     useState<string | null>(null)
 
+  const reduceMotion =
+    settings.animationLevel === 'reduced'
+
+  const speed = reduceMotion ? 0.5 : 1
+
+  useEffect(() => {
+    if (!toast) {
+      return
+    }
+
+    const timer = window.setTimeout(() => {
+      setToast(null)
+    }, 2800)
+
+    return () => {
+      window.clearTimeout(timer)
+    }
+  }, [toast])
+
+  const updateSettings = (
+    next: UserSettings,
+  ) => {
+    setSettings(saveUserSettings(next))
+  }
+
+  const handleResetLocalData = () => {
+    resetFortuneHistory()
+    resetTodayDrawCount()
+    resetOfferingState()
+    resetUserSettings()
+
+    setHistory([])
+    setDrawCount(0)
+    setDrawMessage(null)
+    setReport(null)
+    setPhase('idle')
+    setSettings(getUserSettings())
+  }
+
   const runAnalysis = async () => {
   const nextDrawCount =
     incrementTodayDrawCount()
@@ -63,7 +138,12 @@ function App() {
   setDrawCount(nextDrawCount)
 
   setDrawMessage(
-    getDrawMessage(nextDrawCount),
+    getDrawMessage(nextDrawCount, {
+      darkHumorLevel:
+        settings.darkHumorLevel,
+      elderNicknameEnabled:
+        settings.elderNicknameEnabled,
+    }),
   )
 
   const result =
@@ -85,28 +165,44 @@ function App() {
     setHistory(nextHistory)
 
     setPhase('calibrating')
-    await wait(1200)
+    await wait(PHASE_MS.calibrating * speed)
 
     setPhase('scanning')
-    await wait(2200)
+    await wait(PHASE_MS.scanning * speed)
 
     setPhase('revealing')
-    await wait(1000)
+    await wait(PHASE_MS.revealing * speed)
 
     setPhase('result')
   }
 
   return (
-    <main className="app">
-<button
-  type="button"
-  className="history-trigger"
-  onClick={() =>
-    setHistoryOpen(true)
-  }
->
-  OBSERVATION LOG
-</button>
+    <main
+      className={`app${
+        reduceMotion ? ' anim-reduced' : ''
+      }`}
+    >
+      <div className="app-toolbar">
+        <button
+          type="button"
+          className="history-trigger"
+          onClick={() =>
+            setHistoryOpen(true)
+          }
+        >
+          天机档案
+        </button>
+
+        <button
+          type="button"
+          className="history-trigger offering-trigger"
+          onClick={() =>
+            setOfferingOpen(true)
+          }
+        >
+          科研香火
+        </button>
+      </div>
 
 <HistoryDrawer
   open={historyOpen}
@@ -114,6 +210,17 @@ function App() {
   onClose={() =>
     setHistoryOpen(false)
   }
+/>
+
+<OfferingDrawer
+  open={offeringOpen}
+  settings={settings}
+  onClose={() =>
+    setOfferingOpen(false)
+  }
+  onSettingsChange={updateSettings}
+  onResetLocalData={handleResetLocalData}
+  onNotify={setToast}
 />
       <AnimatePresence mode="wait">
         {phase === 'idle' && (
@@ -183,6 +290,7 @@ function App() {
               phase={phase}
               drawCount={drawCount}
               drawMessage={drawMessage}
+              duration={ANALYSIS_TOTAL_MS * speed}
             />
           </div>
         )}
@@ -218,6 +326,35 @@ function App() {
               onRetry={runAnalysis}
             />
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {toast && (
+          <motion.p
+            className="app-toast"
+            initial={{
+              opacity: 0,
+              y: 10,
+              x: '-50%',
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              x: '-50%',
+            }}
+            exit={{
+              opacity: 0,
+              y: 6,
+              x: '-50%',
+            }}
+            transition={{
+              duration: 0.3,
+              ease: 'easeOut',
+            }}
+          >
+            {toast}
+          </motion.p>
         )}
       </AnimatePresence>
     </main>

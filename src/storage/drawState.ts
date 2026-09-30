@@ -77,3 +77,13 @@ export function incrementTodayDrawCount(): number {
 
   return nextCount
 }
+
+export function resetTodayDrawCount(): void {
+  try {
+    window.localStorage.removeItem(
+      STORAGE_KEY,
+    )
+  } catch {
+    // 同上。
+  }
+}

@@ -72,7 +72,7 @@ function HistoryDrawer({
             <div className="history-header">
               <div>
                 <span className="history-eyebrow">
-                  OBSERVATION LOG
+                  观测记录
                 </span>
 
                 <h2>
