@@ -514,7 +514,7 @@ export function renderFortuneCard(
   setFont(ctx, 22, 400, MONO_FONT)
   ctx.fillStyle = '#3f4652'
   ctx.fillText(
-    '本结果由随机数与玄学共同生成，不具备任何预测能力',
+    '组会气场分析仪 · 随机数生成器荣誉出品',
     PADDING,
     HEIGHT - 90,
   )

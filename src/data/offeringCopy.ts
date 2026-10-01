@@ -215,9 +215,6 @@ export function getOfferingTier(
   )
 }
 
-export const offeringDisclaimer =
-  '本页面为仿真界面，系统收不到任何钱，请放心使用。'
-
 export interface OfferingPaymentMethod {
   id: string
   label: string
@@ -319,14 +316,11 @@ export const fakeVerifyFields: FakeVerifyField[] =
 export const fakeVerifySubmit =
   '提交认证（按钮也是装饰）'
 
-export const fakeVerifyNote =
-  '以上输入框均为装饰，无法输入，不读取、不存储、不发送任何内容。'
-
 export const offeringIntro = {
   title: '真充啊？',
   lines: [
-    '本系统不接微信，不接支付宝，',
-    '不接任何真实支付渠道。',
+    '本系统连营业执照都没有，',
+    '收不了你的钱。',
     '如果你真的很想转账，',
     '建议转给导师当组会经费。',
   ],

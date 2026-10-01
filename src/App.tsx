@@ -361,10 +361,6 @@ function App() {
               >
                 开始测算
               </button>
-
-              <p className="disclaimer">
-                Experimental system · Results for entertainment only
-              </p>
             </section>
           </motion.div>
         )}

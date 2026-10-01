@@ -21,14 +21,12 @@ import { playOffering } from '../engine/sound'
 import {
   fakeVerifyFields,
   fakeVerifyIntro,
-  fakeVerifyNote,
   fakeVerifySubmit,
   getBalanceCopy,
   getOfferingFeedback,
   getOfferingPhaseLabel,
   getOfferingTier,
   offeringDeclineMessage,
-  offeringDisclaimer,
   offeringIntro,
   offeringPackages,
   offeringPaymentMethods,
@@ -544,10 +542,6 @@ function OfferingDrawer({
                   <span className="setting-name">
                     实名认证通道
                   </span>
-
-                  <span className="setting-hint">
-                    本通道未接通任何真实系统
-                  </span>
                 </span>
 
                 <span className="offering-verify-arrow">
@@ -603,10 +597,6 @@ function OfferingDrawer({
                   >
                     {fakeVerifySubmit}
                   </button>
-
-                  <p className="fake-form-note">
-                    {fakeVerifyNote}
-                  </p>
                 </div>
               )}
             </section>
@@ -851,10 +841,6 @@ function OfferingDrawer({
                 </p>
               )}
             </section>
-
-            <p className="offering-disclaimer">
-              {offeringDisclaimer}
-            </p>
           </motion.aside>
 
           <AnimatePresence>
