@@ -16,6 +16,8 @@ import {
   markOfferingIntroSeen,
 } from '../storage/offeringState'
 
+import { playOffering } from '../engine/sound'
+
 import {
   fakeVerifyFields,
   fakeVerifyIntro,
@@ -49,6 +51,7 @@ interface OfferingDrawerProps {
   onSettingsChange: (next: UserSettings) => void
   onResetLocalData: () => void
   onNotify: (message: string) => void
+  onOfferingComplete: () => void
 }
 
 const darkHumorOptions: Array<{
@@ -77,6 +80,7 @@ function OfferingDrawer({
   onSettingsChange,
   onResetLocalData,
   onNotify,
+  onOfferingComplete,
 }: OfferingDrawerProps) {
   const [offering, setOffering] =
     useState<OfferingState>(() =>
@@ -110,9 +114,16 @@ function OfferingDrawer({
   const [verifyOpen, setVerifyOpen] =
     useState(false)
 
-  const timersRef = useRef<number[]>([])
+  const [introOpen, setIntroOpen] =
+    useState(false)
 
-  const introOpen = open && !introSeen
+  const [pendingOffer, setPendingOffer] =
+    useState<{
+      id: string
+      amount: number
+    } | null>(null)
+
+  const timersRef = useRef<number[]>([])
 
   const tier = getOfferingTier(
     offering.totalOffering,
@@ -146,8 +157,10 @@ function OfferingDrawer({
       }
 
       if (introOpen) {
-        setIntroSeen(true)
+        setIntroOpen(false)
+        setPendingOffer(null)
         markOfferingIntroSeen()
+        setIntroSeen(true)
         return
       }
 
@@ -172,16 +185,12 @@ function OfferingDrawer({
     onClose,
   ])
 
-  const handleOffer = async (
+  const runOffer = async (
     id: string,
     amount: number,
   ) => {
-    if (phase === 'processing') {
-      return
-    }
-
-    timersRef.current.forEach((id) => {
-      window.clearTimeout(id)
+    timersRef.current.forEach((timerId) => {
+      window.clearTimeout(timerId)
     })
 
     timersRef.current.length = 0
@@ -199,12 +208,33 @@ function OfferingDrawer({
     setFeedback(getOfferingFeedback())
     setPhase('success')
 
+    playOffering()
+    onOfferingComplete()
+
     const resetId = window.setTimeout(() => {
       setPhase('idle')
       setProcessingId(null)
     }, 1500)
 
     timersRef.current.push(resetId)
+  }
+
+  const handleOffer = (
+    id: string,
+    amount: number,
+  ) => {
+    if (phase === 'processing') {
+      return
+    }
+
+    // 首次点击档位时才拦截询问，不在打开抽屉时打扰
+    if (!introSeen) {
+      setPendingOffer({ id, amount })
+      setIntroOpen(true)
+      return
+    }
+
+    void runOffer(id, amount)
   }
 
   const handleTitleClick = () => {
@@ -225,13 +255,23 @@ function OfferingDrawer({
   const handleDeclineIntro = () => {
     markOfferingIntroSeen()
     setIntroSeen(true)
-    onClose()
+    setIntroOpen(false)
+    setPendingOffer(null)
     onNotify(offeringDeclineMessage)
   }
 
   const handleAcceptIntro = () => {
     markOfferingIntroSeen()
     setIntroSeen(true)
+    setIntroOpen(false)
+
+    const pending = pendingOffer
+
+    setPendingOffer(null)
+
+    if (pending) {
+      void runOffer(pending.id, pending.amount)
+    }
   }
 
   const handleReset = () => {
@@ -247,8 +287,8 @@ function OfferingDrawer({
 
   const handleClose = () => {
     setTitleClicks(0)
-    markOfferingIntroSeen()
-    setIntroSeen(true)
+    setIntroOpen(false)
+    setPendingOffer(null)
     onClose()
   }
 
@@ -278,7 +318,7 @@ function OfferingDrawer({
           >
             <div className="offering-header">
               <div>
-                <span className="offering-eyebrow">
+                <span className="app-eyebrow">
                   香火供奉
                 </span>
 
@@ -575,7 +615,7 @@ function OfferingDrawer({
 
             <section className="offering-settings">
               <div>
-                <span className="offering-eyebrow">
+                <span className="app-eyebrow">
                   系统配置
                 </span>
 
@@ -641,19 +681,51 @@ function OfferingDrawer({
                   </span>
 
                   <span className="setting-hint">
-                    尚未接入音效素材
+                    扫描、揭示与香火到账的提示音
                   </span>
                 </div>
 
-                <span className="setting-coming">
-                  暂未开放
-                </span>
+                <div className="setting-segments">
+                  <button
+                    type="button"
+                    className={
+                      settings.soundEnabled
+                        ? 'active'
+                        : ''
+                    }
+                    onClick={() =>
+                      onSettingsChange({
+                        ...settings,
+                        soundEnabled: true,
+                      })
+                    }
+                  >
+                    开启
+                  </button>
+
+                  <button
+                    type="button"
+                    className={
+                      settings.soundEnabled
+                        ? ''
+                        : 'active'
+                    }
+                    onClick={() =>
+                      onSettingsChange({
+                        ...settings,
+                        soundEnabled: false,
+                      })
+                    }
+                  >
+                    关闭
+                  </button>
+                </div>
               </div>
 
               {devMode && (
                 <div className="dev-config">
                   <div className="dev-config-header">
-                    <span className="offering-eyebrow">
+                    <span className="app-eyebrow">
                       开发者选项
                     </span>
 
@@ -788,13 +860,13 @@ function OfferingDrawer({
           <AnimatePresence>
             {introOpen && (
               <motion.div
-                className="offering-overlay"
+                className="app-overlay"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
                 <motion.div
-                  className="offering-dialog"
+                  className="app-dialog"
                   initial={{
                     opacity: 0,
                     y: 12,
@@ -814,13 +886,13 @@ function OfferingDrawer({
                     ease: 'easeOut',
                   }}
                 >
-                  <span className="offering-eyebrow">
+                  <span className="app-eyebrow">
                     温馨提示
                   </span>
 
                   <h3>{offeringIntro.title}</h3>
 
-                  <div className="offering-dialog-lines">
+                  <div className="app-dialog-lines">
                     {offeringIntro.lines.map(
                       (line) => (
                         <p key={line}>{line}</p>
@@ -828,11 +900,11 @@ function OfferingDrawer({
                     )}
                   </div>
 
-                  <p className="offering-dialog-question">
+                  <p className="app-dialog-question">
                     {offeringIntro.question}
                   </p>
 
-                  <div className="offering-dialog-actions">
+                  <div className="app-dialog-actions">
                     <button
                       type="button"
                       onClick={handleAcceptIntro}
@@ -854,13 +926,13 @@ function OfferingDrawer({
 
             {resetOpen && (
               <motion.div
-                className="offering-overlay"
+                className="app-overlay"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
                 <motion.div
-                  className="offering-dialog"
+                  className="app-dialog"
                   initial={{
                     opacity: 0,
                     y: 12,
@@ -880,13 +952,13 @@ function OfferingDrawer({
                     ease: 'easeOut',
                   }}
                 >
-                  <span className="offering-eyebrow">
+                  <span className="app-eyebrow">
                     数据归零
                   </span>
 
                   <h3>你即将清除：</h3>
 
-                  <ul className="offering-dialog-list">
+                  <ul className="app-dialog-list">
                     {resetConfirmItems.map(
                       (item) => (
                         <li key={item}>{item}</li>
@@ -894,11 +966,11 @@ function OfferingDrawer({
                     )}
                   </ul>
 
-                  <p className="offering-dialog-question">
+                  <p className="app-dialog-question">
                     该操作无法恢复。
                   </p>
 
-                  <div className="offering-dialog-actions">
+                  <div className="app-dialog-actions">
                     <button
                       type="button"
                       className="ghost"

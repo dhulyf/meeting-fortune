@@ -1,11 +1,16 @@
 import HistoryDrawer from './components/HistoryDrawer'
 import OfferingDrawer from './components/OfferingDrawer'
+import MeetingCountdown from './components/MeetingCountdown'
 import {
   getFortuneHistory,
   resetFortuneHistory,
   saveFortuneReport,
 } from './storage/fortuneHistory'
-import { useEffect, useState } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {
   AnimatePresence,
   motion,
@@ -18,10 +23,17 @@ import ResultCard from './components/ResultCard'
 
 import { generateFortune } from './engine/fortuneEngine'
 import { buildFortuneReport } from './engine/reportEngine'
+import {
+  playReveal,
+  playScan,
+  playUnlock,
+  setSoundEnabled,
+} from './engine/sound'
 
 import type { FortuneReport } from './types/fortune'
 import type { AppPhase } from './types/ui'
 import type { UserSettings } from './types/settings'
+import type { AchievementId } from './data/achievements'
 import {
   getTodayDrawCount,
   incrementTodayDrawCount,
@@ -33,6 +45,12 @@ import {
 } from './storage/offeringState'
 
 import {
+  evaluateAchievements,
+  getUnlockedIds,
+  resetAchievements,
+} from './storage/achievements'
+
+import {
   getUserSettings,
   resetUserSettings,
   saveUserSettings,
@@ -41,6 +59,10 @@ import {
 import {
   getDrawMessage,
 } from './data/redrawMessages'
+
+import {
+  getScannerQuip,
+} from './data/scannerQuips'
 
 
 function wait(ms: number) {
@@ -92,10 +114,23 @@ function App() {
   const [drawMessage, setDrawMessage] =
     useState<string | null>(null)
 
+  const [achievements, setAchievements] =
+    useState<AchievementId[]>(
+      () => getUnlockedIds(),
+    )
+
+  const lastQuipRef = useRef<string | null>(
+    null,
+  )
+
   const reduceMotion =
     settings.animationLevel === 'reduced'
 
   const speed = reduceMotion ? 0.5 : 1
+
+  useEffect(() => {
+    setSoundEnabled(settings.soundEnabled)
+  }, [settings.soundEnabled])
 
   useEffect(() => {
     if (!toast) {
@@ -117,11 +152,40 @@ function App() {
     setSettings(saveUserSettings(next))
   }
 
+  /** 判定新解锁的成就，并提示 */
+  const syncAchievements = () => {
+    const unlocked = evaluateAchievements()
+
+    if (unlocked.length === 0) {
+      return
+    }
+
+    setAchievements(getUnlockedIds())
+    playUnlock()
+
+    setToast(
+      `解锁成就：${unlocked
+        .map((item) => item.name)
+        .join(' / ')}`,
+    )
+  }
+
+  const handleScannerClick = () => {
+    const quip = getScannerQuip(
+      lastQuipRef.current,
+    )
+
+    lastQuipRef.current = quip
+
+    setToast(quip)
+  }
+
   const handleResetLocalData = () => {
     resetFortuneHistory()
     resetTodayDrawCount()
     resetOfferingState()
     resetUserSettings()
+    resetAchievements()
 
     setHistory([])
     setDrawCount(0)
@@ -129,6 +193,7 @@ function App() {
     setReport(null)
     setPhase('idle')
     setSettings(getUserSettings())
+    setAchievements([])
   }
 
   const runAnalysis = async () => {
@@ -164,6 +229,8 @@ function App() {
 
     setHistory(nextHistory)
 
+    playScan()
+
     setPhase('calibrating')
     await wait(PHASE_MS.calibrating * speed)
 
@@ -174,6 +241,9 @@ function App() {
     await wait(PHASE_MS.revealing * speed)
 
     setPhase('result')
+
+    playReveal(newReport.level)
+    syncAchievements()
   }
 
   return (
@@ -207,6 +277,7 @@ function App() {
 <HistoryDrawer
   open={historyOpen}
   history={history}
+  unlockedAchievements={achievements}
   onClose={() =>
     setHistoryOpen(false)
   }
@@ -221,6 +292,7 @@ function App() {
   onSettingsChange={updateSettings}
   onResetLocalData={handleResetLocalData}
   onNotify={setToast}
+  onOfferingComplete={syncAchievements}
 />
       <AnimatePresence mode="wait">
         {phase === 'idle' && (
@@ -261,11 +333,26 @@ function App() {
                 对导师注意力、PPT 生存状态及未知科研风险进行非严格统计分析。
               </p>
 
-              <div className="scanner">
-                <div className="scanner-core">
+              <MeetingCountdown
+                value={settings.nextMeetingAt}
+                onChange={(next) =>
+                  updateSettings({
+                    ...settings,
+                    nextMeetingAt: next,
+                  })
+                }
+              />
+
+              <button
+                type="button"
+                className="scanner"
+                aria-label="扫描仪"
+                onClick={handleScannerClick}
+              >
+                <span className="scanner-core">
                   STANDBY
-                </div>
-              </div>
+                </span>
+              </button>
 
               <button
                 type="button"

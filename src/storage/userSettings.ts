@@ -13,6 +13,7 @@ export const DEFAULT_USER_SETTINGS: UserSettings =
     soundEnabled: false,
     darkHumorLevel: 'normal',
     elderNicknameEnabled: true,
+    nextMeetingAt: null,
   }
 
 const ANIMATION_LEVELS: AnimationLevel[] = [
@@ -63,6 +64,12 @@ function sanitize(
         ? raw.elderNicknameEnabled
         : DEFAULT_USER_SETTINGS
             .elderNicknameEnabled,
+
+    nextMeetingAt:
+      typeof raw.nextMeetingAt === 'number' &&
+      Number.isFinite(raw.nextMeetingAt)
+        ? raw.nextMeetingAt
+        : null,
   }
 }
 

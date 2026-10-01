@@ -3,6 +3,14 @@ import {
   motion,
 } from 'motion/react'
 
+import {
+  achievements as achievementList,
+} from '../data/achievements'
+
+import type {
+  AchievementId,
+} from '../data/achievements'
+
 import type {
   FortuneReport,
 } from '../types/fortune'
@@ -10,6 +18,7 @@ import type {
 interface HistoryDrawerProps {
   open: boolean
   history: FortuneReport[]
+  unlockedAchievements: AchievementId[]
   onClose: () => void
 }
 
@@ -31,6 +40,7 @@ function formatTime(
 function HistoryDrawer({
   open,
   history,
+  unlockedAchievements,
   onClose,
 }: HistoryDrawerProps) {
   return (
@@ -162,6 +172,66 @@ function HistoryDrawer({
                 )}
               </div>
             )}
+
+            <section className="achievement-section">
+              <div className="achievement-head">
+                <div>
+                  <span className="history-eyebrow">
+                    成就墙
+                  </span>
+
+                  <h3 className="achievement-title">
+                    ACHIEVEMENTS
+                  </h3>
+                </div>
+
+                <span className="achievement-count">
+                  {unlockedAchievements.length}
+                  {' / '}
+                  {achievementList.length}
+                </span>
+              </div>
+
+              <div className="achievement-list">
+                {achievementList.map((item) => {
+                  const unlocked =
+                    unlockedAchievements.includes(
+                      item.id,
+                    )
+
+                  return (
+                    <article
+                      key={item.id}
+                      className={
+                        unlocked
+                          ? 'achievement unlocked'
+                          : 'achievement'
+                      }
+                    >
+                      <span className="achievement-mark">
+                        {unlocked ? '◆' : '◇'}
+                      </span>
+
+                      <div className="achievement-body">
+                        <strong>
+                          {item.name}
+                        </strong>
+
+                        <small>
+                          {item.condition}
+                        </small>
+
+                        {unlocked && (
+                          <span className="achievement-quip">
+                            {item.quip}
+                          </span>
+                        )}
+                      </div>
+                    </article>
+                  )
+                })}
+              </div>
+            </section>
           </motion.aside>
         </>
       )}

@@ -1892,7 +1892,7 @@ h1 {
   gap: 20px;
 }
 
-.offering-eyebrow {
+.app-eyebrow {
   font-family: "Courier New", monospace;
 
   font-size: 9px;
@@ -2504,21 +2504,6 @@ h1 {
   color: #565e6b;
 }
 
-.setting-coming {
-  flex-shrink: 0;
-
-  padding: 5px 8px;
-
-  border: 1px dashed #2e343e;
-  border-radius: 4px;
-
-  font-family: "Courier New", monospace;
-  font-size: 8px;
-  letter-spacing: 0.16em;
-
-  color: #4d5460;
-}
-
 .setting-segments {
   display: flex;
   flex-shrink: 0;
@@ -2673,7 +2658,7 @@ h1 {
    香火弹窗
    ========================= */
 
-.offering-overlay {
+.app-overlay {
   position: fixed;
   z-index: 70;
 
@@ -2690,7 +2675,7 @@ h1 {
   backdrop-filter: blur(4px);
 }
 
-.offering-dialog {
+.app-dialog {
   width: min(100%, 380px);
 
   padding: 26px 24px;
@@ -2708,7 +2693,7 @@ h1 {
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
 }
 
-.offering-dialog h3 {
+.app-dialog h3 {
   margin: 10px 0 0;
 
   font-size: 20px;
@@ -2717,11 +2702,11 @@ h1 {
   color: #dedcd6;
 }
 
-.offering-dialog-lines {
+.app-dialog-lines {
   margin-top: 14px;
 }
 
-.offering-dialog-lines p {
+.app-dialog-lines p {
   margin: 0;
 
   font-size: 13px;
@@ -2730,7 +2715,7 @@ h1 {
   color: #979ca5;
 }
 
-.offering-dialog-list {
+.app-dialog-list {
   margin: 14px 0 0;
   padding-left: 18px;
 
@@ -2740,7 +2725,7 @@ h1 {
   color: #979ca5;
 }
 
-.offering-dialog-question {
+.app-dialog-question {
   margin: 18px 0 0;
 
   font-size: 13px;
@@ -2748,7 +2733,7 @@ h1 {
   color: #b3b5b8;
 }
 
-.offering-dialog-actions {
+.app-dialog-actions {
   display: flex;
 
   gap: 10px;
@@ -2756,7 +2741,7 @@ h1 {
   margin-top: 22px;
 }
 
-.offering-dialog-actions button {
+.app-dialog-actions button {
   flex: 1;
 
   min-height: 44px;
@@ -2777,34 +2762,34 @@ h1 {
     color 0.2s ease;
 }
 
-.offering-dialog-actions button:hover {
+.app-dialog-actions button:hover {
   background: #22262e;
 
   border-color: #697184;
 }
 
-.offering-dialog-actions button.ghost {
+.app-dialog-actions button.ghost {
   border-color: #333842;
 
   background: transparent;
   color: #868d99;
 }
 
-.offering-dialog-actions button.ghost:hover {
+.app-dialog-actions button.ghost:hover {
   border-color: #4c5564;
 
   background: rgba(255, 255, 255, 0.02);
   color: #c3c6cb;
 }
 
-.offering-dialog-actions button.danger {
+.app-dialog-actions button.danger {
   border-color: #5e4141;
 
   background: rgba(120, 70, 70, 0.09);
   color: #c9a2a2;
 }
 
-.offering-dialog-actions button.danger:hover {
+.app-dialog-actions button.danger:hover {
   border-color: #7a5252;
 
   background: rgba(150, 85, 85, 0.15);
@@ -2910,10 +2895,6 @@ h1 {
     padding: 13px 0;
   }
 
-  .setting-coming {
-    align-self: flex-start;
-  }
-
   .setting-segments {
     width: 100%;
   }
@@ -2924,7 +2905,7 @@ h1 {
     min-height: 40px;
   }
 
-  .offering-dialog-actions {
+  .app-dialog-actions {
     flex-direction: column;
   }
 
@@ -2934,6 +2915,304 @@ h1 {
     max-width: 88vw;
 
     text-align: center;
+  }
+}
+
+/* =========================
+   扫描仪可点击
+   ========================= */
+
+button.scanner {
+  appearance: none;
+
+  cursor: pointer;
+}
+
+button.scanner:active {
+  transform: scale(0.99);
+}
+
+button.scanner:focus-visible {
+  outline: 1px solid #5c6474;
+  outline-offset: 6px;
+}
+
+/* =========================
+   组会倒计时
+   ========================= */
+
+.meeting-chip {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  gap: 10px;
+
+  margin-top: 22px;
+  padding: 9px 16px;
+
+  border: 1px solid #2f3541;
+  border-radius: 999px;
+
+  background: rgba(18, 20, 24, 0.6);
+
+  font-size: 12px;
+
+  color: #8c919b;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.meeting-chip:hover {
+  border-color: #4c5564;
+
+  background: rgba(25, 28, 34, 0.82);
+}
+
+.meeting-chip-key {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+
+  color: #5d6470;
+}
+
+.meeting-chip-value {
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+
+  font-variant-numeric: tabular-nums;
+
+  color: #c6b78d;
+}
+
+.meeting-chip-value.muted {
+  font-family: inherit;
+  font-size: 12px;
+
+  color: #6f7684;
+}
+
+.meeting-chip-quip {
+  font-size: 11px;
+
+  color: #6f7684;
+}
+
+.meeting-input {
+  width: 100%;
+  height: 46px;
+
+  margin-top: 18px;
+  padding: 0 14px;
+
+  border: 1px solid #333842;
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.02);
+
+  color: #d5d6d9;
+
+  font-size: 14px;
+
+  color-scheme: dark;
+}
+
+.meeting-input:focus {
+  outline: none;
+
+  border-color: #5c6474;
+}
+
+/* =========================
+   成就墙
+   ========================= */
+
+.achievement-section {
+  margin-top: 36px;
+  padding-top: 28px;
+
+  border-top: 1px solid #262a32;
+}
+
+.achievement-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 18px;
+}
+
+.achievement-title {
+  margin: 8px 0 0;
+
+  font-family: "Courier New", monospace;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+
+  color: #dedcd6;
+}
+
+.achievement-count {
+  flex-shrink: 0;
+
+  padding-top: 4px;
+
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+
+  font-variant-numeric: tabular-nums;
+
+  color: #6f7684;
+}
+
+.achievement-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.achievement {
+  display: flex;
+
+  gap: 12px;
+
+  padding: 13px 14px;
+
+  border: 1px solid #23272f;
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.008);
+}
+
+.achievement.unlocked {
+  border-color: #3d3629;
+
+  background: rgba(184, 162, 115, 0.045);
+}
+
+.achievement-mark {
+  flex-shrink: 0;
+
+  font-size: 12px;
+  line-height: 1.55;
+
+  color: #3a404b;
+}
+
+.achievement.unlocked .achievement-mark {
+  color: #c6b78d;
+}
+
+.achievement-body {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.achievement-body strong {
+  font-size: 13.5px;
+  font-weight: 500;
+
+  color: #6b7280;
+}
+
+.achievement.unlocked .achievement-body strong {
+  color: #d8d5cd;
+}
+
+.achievement-body small {
+  font-size: 11px;
+  line-height: 1.5;
+
+  color: #4f5661;
+}
+
+.achievement-quip {
+  margin-top: 3px;
+
+  font-size: 11.5px;
+  line-height: 1.6;
+
+  color: #8f887d;
+}
+
+/* =========================
+   结果卡操作区
+   ========================= */
+
+.result-actions {
+  display: flex;
+
+  gap: 12px;
+
+  margin-top: 30px;
+}
+
+.result-actions .retry-button {
+  flex: 1;
+
+  margin-top: 0;
+}
+
+.share-button {
+  flex-shrink: 0;
+
+  height: 50px;
+
+  padding: 0 22px;
+
+  border: 1px solid #414754;
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: #a9b0bc;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.share-button:hover {
+  border-color: #5c6474;
+
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* =========================
+   新增模块 · 手机
+   ========================= */
+
+@media (max-width: 600px) {
+  .meeting-chip {
+    gap: 6px 10px;
+
+    max-width: 100%;
+  }
+
+  .result-actions {
+    flex-direction: column;
+  }
+
+  .share-button {
+    width: 100%;
   }
 }
 

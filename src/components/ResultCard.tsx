@@ -4,6 +4,9 @@ import {
 import AnimatedNumber from './AnimatedNumber'
 
 import { fortuneLevels } from '../data/fortuneLevels'
+import {
+  downloadFortuneCard,
+} from '../share/shareCard'
 
 import type { FortuneReport } from '../types/fortune'
 
@@ -390,31 +393,61 @@ function ResultCard({
         </p>
       </motion.div>
 
-      <motion.button
-        type="button"
-        className="retry-button"
-        onClick={onRetry}
-        initial={{
-          opacity: 0,
-          y: 8,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          ...itemTransition,
-          delay: 1.6,
-        }}
-        whileHover={{
-          y: -1,
-        }}
-        whileTap={{
-          scale: 0.99,
-        }}
-      >
-        再估计一次
-      </motion.button>
+      <div className="result-actions">
+        <motion.button
+          type="button"
+          className="retry-button"
+          onClick={onRetry}
+          initial={{
+            opacity: 0,
+            y: 8,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            ...itemTransition,
+            delay: 1.6,
+          }}
+          whileHover={{
+            y: -1,
+          }}
+          whileTap={{
+            scale: 0.99,
+          }}
+        >
+          再估计一次
+        </motion.button>
+
+        <motion.button
+          type="button"
+          className="share-button"
+          onClick={() =>
+            downloadFortuneCard(report)
+          }
+          initial={{
+            opacity: 0,
+            y: 8,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            ...itemTransition,
+            delay: 1.7,
+          }}
+          whileHover={{
+            y: -1,
+          }}
+          whileTap={{
+            scale: 0.99,
+          }}
+        >
+          保存结果卡
+        </motion.button>
+      </div>
     </section>
   )
 }

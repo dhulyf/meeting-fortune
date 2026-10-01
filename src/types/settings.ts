@@ -12,6 +12,7 @@ export interface UserSettings {
   soundEnabled: boolean
   darkHumorLevel: DarkHumorLevel
   elderNicknameEnabled: boolean
+  nextMeetingAt: number | null
 }
 
 export interface OfferingState {
