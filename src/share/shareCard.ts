@@ -19,12 +19,12 @@ const accentByLevel: Record<
   FortuneLevel,
   string
 > = {
-  daji: '#c8bb8d',
-  ji: '#b7b38e',
-  xiaoji: '#a9b3a1',
-  ping: '#aeb4bf',
-  xiaoxiong: '#b39d86',
-  xiong: '#ae8f8f',
+  daji: '#e9c783',
+  ji: '#c8d599',
+  xiaoji: '#a1d9c3',
+  ping: '#b7c7d2',
+  xiaoxiong: '#d6b18d',
+  xiong: '#d1a4a4',
 }
 
 /* 从左到右：凶 → 大吉 */
@@ -134,13 +134,13 @@ function drawBackground(
     HEIGHT,
   )
 
-  background.addColorStop(0, '#1b1f26')
-  background.addColorStop(1, '#0d0f12')
+  background.addColorStop(0, '#27322c')
+  background.addColorStop(1, '#131b16')
 
   ctx.fillStyle = background
   ctx.fillRect(0, 0, WIDTH, HEIGHT)
 
-  ctx.strokeStyle = 'rgba(112, 124, 146, 0.05)'
+  ctx.strokeStyle = 'rgba(161, 217, 195, 0.05)'
   ctx.lineWidth = 1
 
   for (let x = 0; x <= WIDTH; x += 60) {
@@ -178,12 +178,12 @@ function drawHeader(
   report: FortuneReport,
 ): number {
   setFont(ctx, 26, 400, MONO_FONT)
-  ctx.fillStyle = '#6f7888'
+  ctx.fillStyle = '#bdc9ba'
   ctx.textAlign = 'left'
   ctx.fillText('组会气场分析仪', PADDING, 104)
 
   ctx.textAlign = 'right'
-  ctx.fillStyle = '#4f5661'
+  ctx.fillStyle = '#94a28e'
   ctx.fillText(
     formatSerial(report.timestamp),
     WIDTH - PADDING,
@@ -241,7 +241,7 @@ function drawScale(
     ctx.shadowBlur = 0
 
     setFont(ctx, 24)
-    ctx.fillStyle = active ? accent : '#4c5360'
+    ctx.fillStyle = active ? accent : '#96a38e'
     ctx.textAlign = 'center'
     ctx.fillText(
       item.label,
@@ -305,7 +305,7 @@ function drawMetrics(
     ctx.stroke()
 
     setFont(ctx, 24)
-    ctx.fillStyle = '#777e89'
+    ctx.fillStyle = '#b2bfaa'
     ctx.fillText(row.name, x + 22, top + 24)
 
     setFont(ctx, 54, 500, MONO_FONT)
@@ -377,11 +377,11 @@ function drawDetails(
 
   rows.forEach((row) => {
     setFont(ctx, 26)
-    ctx.fillStyle = '#707886'
+    ctx.fillStyle = '#a5b49d'
     ctx.fillText(row.label, PADDING, y)
 
     setFont(ctx, 30)
-    ctx.fillStyle = '#b3b5b8'
+    ctx.fillStyle = '#d0d3c5'
 
     const lines = wrapText(
       ctx,
@@ -436,7 +436,7 @@ function drawAdvice(
 
   setFont(ctx, 24, 400, MONO_FONT)
   ctx.fillStyle = hexToRgba(accent, 0.75)
-  ctx.fillText('建议', PADDING + 40, top + 28)
+  ctx.fillText('研究所友情提醒', PADDING + 40, top + 28)
 
   setFont(ctx, 28)
   ctx.fillStyle = '#a8abb2'
@@ -471,6 +471,24 @@ export function renderFortuneCard(
   drawBackground(ctx, accent)
 
   let y = drawHeader(ctx, report)
+
+  ctx.save()
+  ctx.translate(WIDTH - PADDING - 150, y + 100)
+  ctx.rotate(-7 * Math.PI / 180)
+  ctx.strokeStyle = '#a1d9c3'
+  ctx.lineWidth = 2
+  ctx.setLineDash([8, 5])
+  ctx.strokeRect(-130, -72, 260, 144)
+  ctx.setLineDash([])
+  ctx.fillStyle = '#a1d9c3'
+  ctx.textAlign = 'center'
+  setFont(ctx, 22)
+  ctx.fillText('玄学同行评审', 0, -48)
+  setFont(ctx, 42, 600)
+  ctx.fillText('已通过', 0, -10)
+  setFont(ctx, 18)
+  ctx.fillText('随机数签字认可', 0, 42)
+  ctx.restore()
 
   setFont(ctx, 30)
   ctx.fillStyle = '#8f949d'
@@ -512,9 +530,9 @@ export function renderFortuneCard(
   drawAdvice(ctx, report, y, accent)
 
   setFont(ctx, 22, 400, MONO_FONT)
-  ctx.fillStyle = '#3f4652'
+  ctx.fillStyle = '#94a28e'
   ctx.fillText(
-    '组会气场分析仪 · 随机数生成器荣誉出品',
+    '不严谨研究所 · 随机数生成器荣誉出品',
     PADDING,
     HEIGHT - 90,
   )

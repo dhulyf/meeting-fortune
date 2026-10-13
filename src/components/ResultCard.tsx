@@ -66,6 +66,7 @@ function ResultCard({
       value: metrics.mentorAttention,
       suffix: '%',
       delay: 720,
+      caption: '今天会被认真听吗',
     },
     {
       key: 'ppt',
@@ -73,6 +74,7 @@ function ResultCard({
       value: metrics.pptSurvival,
       suffix: '',
       delay: 840,
+      caption: '汇报材料的玄学护甲',
     },
     {
       key: 'task',
@@ -80,6 +82,7 @@ function ResultCard({
       value: metrics.taskDropRate,
       suffix: '%',
       delay: 960,
+      caption: '“顺便再做个实验”预警',
     },
   ]
 
@@ -167,6 +170,11 @@ function ResultCard({
       )}
 
       <div className="fortune-gauge">
+        <div className="fortune-stamp">
+          <span>玄学同行评审</span>
+          <strong>已通过</strong>
+          <small>随机数签字认可</small>
+        </div>
         <motion.p
           className="result-label"
           initial={{ opacity: 0 }}
@@ -296,6 +304,7 @@ function ResultCard({
             <span className="metric-name">
               {item.name}
             </span>
+            <span className="metric-caption">{item.caption}</span>
 
             <strong className="metric-value">
               <AnimatedNumber
@@ -385,7 +394,7 @@ function ResultCard({
         }}
       >
         <span className="advice-label">
-          建议
+          研究所友情提醒
         </span>
 
         <p>

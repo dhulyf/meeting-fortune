@@ -27,19 +27,19 @@ const phaseContent: Record<
   calibrating: {
     status: 'SYSTEM CALIBRATION',
     title: '正在校准科研气场',
-    description: '初始化组会环境参数，并尝试建立导师注意力链路。',
+    description: '正在与随机数协商。咖啡可以继续喝，天意暂时不用催。',
   },
 
   scanning: {
     status: 'CHANNEL PROBING',
     title: '正在估计导师注意力信道',
-    description: '同步分析 PPT 生存状态、新任务掉落风险及未知科研扰动。',
+    description: 'PPT 已进入玄学保护范围，正在排查“顺便再做个实验”信号。',
   },
 
   revealing: {
     status: 'ANALYSIS COMPLETE',
     title: '测算完成',
-    description: '正在解码本次组会状态，请保持科研场稳定。',
+    description: '今日天意已打包，正在加盖不严谨研究所专用章。',
   },
 }
 

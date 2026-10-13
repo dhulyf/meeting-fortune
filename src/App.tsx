@@ -17,6 +17,7 @@ import {
 } from 'motion/react'
 
 import './App.css'
+import './visual-refresh.css'
 
 import AnalysisProcess from './components/AnalysisProcess'
 import ResultCard from './components/ResultCard'
@@ -173,6 +174,7 @@ function App() {
   const handleScannerClick = () => {
     const quip = getScannerQuip(
       lastQuipRef.current,
+      settings.elderNicknameEnabled,
     )
 
     lastQuipRef.current = quip
@@ -252,6 +254,10 @@ function App() {
         reduceMotion ? ' anim-reduced' : ''
       }`}
     >
+      <div className="app-brand">
+        <span className="brand-name">不严谨研究所</span>
+        <span className="brand-caption">UNRELIABLE RESEARCH LAB</span>
+      </div>
       <div className="app-toolbar">
         <button
           type="button"
@@ -317,50 +323,81 @@ function App() {
             }}
           >
             <section className="analyzer">
-              <div className="status">
-                SYSTEM STANDBY
+              <div className="analyzer-copy">
+                <div className="status">
+                  玄学设备在线 · 理性暂时离线
+                </div>
+
+                <p className="eyebrow">
+                  组会前，先迷信一小下
+                </p>
+
+                <h1>
+                  组会气场
+                  <span className="hero-title-accent">分析仪</span>
+                </h1>
+
+                <p className="description">
+                  科学解释不了的，先交给随机数。
+                  测一测导师注意力、PPT 生存状态，以及今天会不会喜提新任务。
+                </p>
+
+                <p className="operator-greeting">
+                  {settings.elderNicknameEnabled
+                    ? '二旬老人，你的玄学工位已就绪。'
+                    : '你的玄学工位已就绪。'}
+                </p>
+
+                <button
+                  type="button"
+                  className="start-button"
+                  onClick={runAnalysis}
+                >
+                  开始测算 <span aria-hidden="true">↗</span>
+                </button>
+                <p className="start-caption">测完该干嘛干嘛，天意也不查考勤。</p>
+
+                <MeetingCountdown
+                  value={settings.nextMeetingAt}
+                  onChange={(next) =>
+                    updateSettings({
+                      ...settings,
+                      nextMeetingAt: next,
+                    })
+                  }
+                />
               </div>
 
-              <p className="eyebrow">
-                RESEARCH MEETING FIELD ANALYZER
-              </p>
-
-              <h1>
-                组会气场分析仪
-              </h1>
-
-              <p className="description">
-                对导师注意力、PPT 生存状态及未知科研风险进行非严格统计分析。
-              </p>
-
-              <MeetingCountdown
-                value={settings.nextMeetingAt}
-                onChange={(next) =>
-                  updateSettings({
-                    ...settings,
-                    nextMeetingAt: next,
-                  })
-                }
-              />
-
-              <button
-                type="button"
-                className="scanner"
-                aria-label="扫描仪"
-                onClick={handleScannerClick}
-              >
-                <span className="scanner-core">
-                  STANDBY
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className="start-button"
-                onClick={runAnalysis}
-              >
-                开始测算
-              </button>
+              <div className="instrument-bay">
+                <div className="instrument-nameplate">
+                  <span>科研气场监测终端</span>
+                  <span>MODEL · X-001</span>
+                </div>
+                <div className="instrument-display">
+                  <span className="instrument-mode">随机数待命</span>
+                  <button
+                    type="button"
+                    className="scanner"
+                    aria-label="扫描仪"
+                    onClick={handleScannerClick}
+                  >
+                    <span className="scanner-core">
+                      <span className="scanner-readout">待机中</span>
+                      <span className="scanner-readout-caption">等待科研人接入</span>
+                    </span>
+                  </button>
+                  <p className="instrument-hint">点击仪器，听它一本正经地胡说八道</p>
+                </div>
+                <div className="instrument-channels">
+                  <span>导师信道 <strong>未连接</strong></span>
+                  <span>玄学模块 <strong className="channel-ready">已就绪</strong></span>
+                </div>
+              </div>
+              <div className="analyzer-footer">
+                <span><b>01</b> 校准科研气场</span>
+                <span><b>02</b> 探测未知扰动</span>
+                <span><b>03</b> 签收今日天意</span>
+              </div>
             </section>
           </motion.div>
         )}
