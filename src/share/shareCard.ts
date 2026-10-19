@@ -317,7 +317,7 @@ function drawMetrics(
     )
 
     const barWidth = columnWidth - 44
-    const barTop = top + boxHeight - 44
+    const barTop = top + boxHeight - 22
 
     ctx.fillStyle = '#22262e'
     ctx.beginPath()
@@ -554,28 +554,26 @@ function buildFileName(
   return `组会运势-${day}-${report.levelLabel}.png`
 }
 
-export function downloadFortuneCard(
-  report: FortuneReport,
-): void {
+export async function downloadFortuneCard(report: FortuneReport): Promise<void> {
+  await document.fonts?.ready
   const canvas = renderFortuneCard(report)
-
-  canvas.toBlob((blob) => {
-    if (!blob) {
-      return
-    }
-
-    const url = URL.createObjectURL(blob)
-
-    const link = document.createElement('a')
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    const timeout = window.setTimeout(() => reject(new Error('图片生成超时，请重试')), 15000)
+    canvas.toBlob(image => {
+      window.clearTimeout(timeout)
+      if (image) resolve(image)
+      else reject(new Error('图片生成失败，请重试'))
+    }, 'image/png')
+  })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  try {
     link.href = url
     link.download = buildFileName(report)
-
     document.body.appendChild(link)
     link.click()
-    document.body.removeChild(link)
-
-    window.setTimeout(() => {
-      URL.revokeObjectURL(url)
-    }, 1000)
-  }, 'image/png')
+  } finally {
+    link.remove()
+    window.setTimeout(() => URL.revokeObjectURL(url), 60000)
+  }
 }

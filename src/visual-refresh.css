@@ -527,3 +527,20 @@ input:focus-visible {
   .analyzer h1 { font-size: 42px; }
   .result-card { padding: 26px 18px; }
 }
+/* Keep refinements above the refreshed green instrument theme. */
+.settings-dialog { background: #172018; border-color: #354132; color: #eee9de; }
+.meeting-comment, .export-feedback { color: #c1cbbb; }
+.brand-caption, .instrument-mode, .scanner-readout-caption, .instrument-hint,
+.instrument-channels, .analyzer-footer, .metric-caption,
+.fortune-stamp span, .fortune-stamp small {
+  color: #b3c0b0;
+  font-size: 11px;
+}
+.result-meta, .result-meta-serial, .fortune-scale-label { color: #b3c0b0; font-size: 11px; }
+.settings-content .setting-hint { color: #b3c0b0; font-size: 12px; }
+@media (max-width: 700px) {
+  .app { padding-top: 140px; }
+  .app-toolbar { top: 76px; left: 20px; right: 20px; justify-content: flex-end; }
+  .brand-caption { font-size: 10px; }
+  .fortune-stamp span, .fortune-stamp small, .analyzer-footer { font-size: 10px; }
+}

@@ -27,14 +27,18 @@ function formatTime(
 ): string {
   const date = new Date(timestamp)
 
-  return date.toLocaleTimeString(
-    'zh-CN',
-    {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    },
-  )
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+  const day = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+  const year = date.getFullYear() !== now.getFullYear()
+    ? `${date.getFullYear()}年` : ''
+  const label = day === today.getTime() ? '今天'
+    : day === yesterday.getTime() ? '昨天'
+    : `${year}${date.getMonth() + 1}月${date.getDate()}日`
+  const time = String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0')
+  return label + ' ' + time
 }
 
 function HistoryDrawer({
@@ -123,7 +127,7 @@ function HistoryDrawer({
                           )}
                         </span>
 
-                        <time>
+                        <time dateTime={new Date(item.timestamp).toISOString()}>
                           {formatTime(
                             item.timestamp,
                           )}

@@ -1,3 +1,4 @@
+import SettingsDrawer from './components/SettingsDrawer'
 import HistoryDrawer from './components/HistoryDrawer'
 import OfferingDrawer from './components/OfferingDrawer'
 import MeetingCountdown from './components/MeetingCountdown'
@@ -86,6 +87,8 @@ const ANALYSIS_TOTAL_MS =
 function App() {
   const [phase, setPhase] =
     useState<AppPhase>('idle')
+
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   const [historyOpen, setHistoryOpen] =
   useState(false)
@@ -278,7 +281,12 @@ function App() {
         >
           科研香火
         </button>
+        <button type="button" className="history-trigger" onClick={() => setSettingsOpen(true)}>
+          设置
+        </button>
       </div>
+
+<SettingsDrawer open={settingsOpen} settings={settings} onClose={() => setSettingsOpen(false)} onSettingsChange={updateSettings} />
 
 <HistoryDrawer
   open={historyOpen}

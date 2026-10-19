@@ -1,3 +1,5 @@
+import { useRef, useState } from 'react'
+import { meetingComments } from '../data/meetingComments'
 import {
   motion,
 } from 'motion/react'
@@ -47,6 +49,22 @@ function ResultCard({
   report,
   onRetry,
 }: ResultCardProps) {
+  const [exportState, setExportState] = useState<'idle' | 'generating' | 'success' | 'error'>('idle')
+  const exporting = useRef(false)
+  const handleExport = async () => {
+    if (exporting.current) return
+    exporting.current = true
+    setExportState('generating')
+    try {
+      await new Promise<void>(resolve => window.requestAnimationFrame(() => resolve()))
+      await downloadFortuneCard(report)
+      setExportState('success')
+    } catch {
+      setExportState('error')
+    } finally {
+      exporting.current = false
+    }
+  }
   const {
     levelLabel,
     headline,
@@ -283,6 +301,8 @@ function ResultCard({
         {oracleText}
       </motion.p>
 
+      <p className="meeting-comment">{meetingComments[report.level]}</p>
+
       <div className="metrics-grid">
         {metricItems.map((item, index) => (
           <motion.div
@@ -432,9 +452,9 @@ function ResultCard({
         <motion.button
           type="button"
           className="share-button"
-          onClick={() =>
-            downloadFortuneCard(report)
-          }
+          onClick={handleExport}
+          disabled={exportState === 'generating'}
+          aria-busy={exportState === 'generating'}
           initial={{
             opacity: 0,
             y: 8,
@@ -454,9 +474,14 @@ function ResultCard({
             scale: 0.99,
           }}
         >
-          保存结果卡
+          {exportState === 'generating' ? '生成中…' : exportState === 'error' ? '重新保存结果卡' : '保存结果卡'}
         </motion.button>
       </div>
+      <p className="export-feedback" role="status" aria-live="polite">
+        {exportState === 'generating' && '正在生成结果卡，请稍候…'}
+        {exportState === 'success' && '结果卡已生成，已发起下载；请在浏览器下载记录中查看。'}
+        {exportState === 'error' && '结果卡生成或下载失败，请重试，或换用系统浏览器。'}
+      </p>
     </section>
   )
 }
